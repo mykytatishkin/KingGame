@@ -7,25 +7,41 @@ document.addEventListener('input', function(event) {
 
 function updateBValue(inputElement) {
     const inputValue = parseInt(inputElement.value);
-    const fixedMultiplier = 2; // Замените на ваше фиксированное число
+    const multiplier = getRowMultiplier(inputElement);
 
     if (!isNaN(inputValue)) {
         const bElement = findBElement(inputElement);
         if (bElement) {
-            bElement.textContent = inputValue * fixedMultiplier;
+            bElement.textContent = inputValue * multiplier;
         }
     }
 }
 
 function findBElement(inputElement) {
-    let currentElement = inputElement.parentElement; // Начинаем с родительского элемента
+    let currentElement = inputElement.parentElement;
     while (currentElement) {
         if (currentElement.tagName === 'TD') {
             return currentElement.querySelector('b');
         }
         currentElement = currentElement.parentElement;
     }
-    return null; // Если не найден элемент <b>
+    return null;
+}
+
+function getRowMultiplier(inputElement) {
+    const rowElement = findRowElement(inputElement);
+    return rowElement ? parseInt(rowElement.dataset.multiplier) || 1 : 1;
+}
+
+function findRowElement(inputElement) {
+    let currentElement = inputElement.parentElement;
+    while (currentElement) {
+        if (currentElement.tagName === 'TR') {
+            return currentElement;
+        }
+        currentElement = currentElement.parentElement;
+    }
+    return null;
 }
 
 function updateTotalValues() {
@@ -36,17 +52,14 @@ function updateTotalValues() {
     for (let i = 1; i < totalRow.cells.length; i++) {
         let sum = 0;
 
-        // Проходим по каждой строке (начиная с первой и заканчивая предпоследней)
         for (let j = 1; j < table.rows.length - 1; j++) {
             const cellValue = parseInt(table.rows[j].cells[i].querySelector('b').textContent);
             sum += isNaN(cellValue) ? 0 : cellValue;
         }
 
-        // Обновляем значение в Total
         totalRow.cells[i].querySelector('b').textContent = sum;
         totalSum += sum;
     }
 
-    // Обновляем общую сумму
     totalRow.cells[0].querySelector('b').textContent = totalSum;
 }
