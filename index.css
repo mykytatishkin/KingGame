@@ -217,3 +217,11 @@ a:hover {
 	color: #f0d90b;
 	border-radius: 5px;
 }
+
+.table-game tr th input {
+	width: 70%;
+	background-color: #f0d90b;
+	border-color: #1f2029;
+	text-align: center;
+	border-radius: 5px;
+}
